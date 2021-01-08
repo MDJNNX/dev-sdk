@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.satan.menu.bjm.EncodeAndDecodeController">
+    <children>
+        <HBox prefWidth="1114.0" VBox.vgrow="NEVER">
+            <children>
+                <Label alignment="CENTER" prefHeight="23.0" prefWidth="27.0" text="算法:">
+                    <HBox.margin>
+                        <Insets left="5.0" right="5.0"/>
+                    </HBox.margin>
+                </Label>
+                <ComboBox fx:id="algComboBox" prefWidth="150.0">
+                    <HBox.margin>
+                        <Insets left="5.0"/>
+                    </HBox.margin>
+                </ComboBox>
+                <Button fx:id="encodeBtn" mnemonicParsing="false" onAction="#encode" text="编码">
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                    <HBox.margin>
+                        <Insets left="5.0"/>
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="decodeBtn" mnemonicParsing="false" onAction="#decode" text="解码">
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                    <HBox.margin>
+                        <Insets left="5.0"/>
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clear" text="清空">
+                    <HBox.margin>
+                        <Insets left="5.0"/>
+                    </HBox.margin>
+                </Button>
+            </children>
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </padding>
+        </HBox>
+        <HBox maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+            <children>
+                <TextArea fx:id="rawTextArea" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </TextArea>
+                <TextArea fx:id="retTextArea" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="5.0"/>
+                    </HBox.margin>
+                </TextArea>
+            </children>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0"/>
+            </padding>
+        </HBox>
+    </children>
+</VBox>

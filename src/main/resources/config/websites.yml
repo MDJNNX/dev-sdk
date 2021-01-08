@@ -1,0 +1,14 @@
+websites:
+  - {"icon": "youdao.png", "name": "有道词典", "url":"http://www.youdao.com/", "keywords": "有道,词典,翻译"}
+  - {"icon": "qq_email.png", "name": "QQ邮箱", "url":"https://mail.qq.com/", "keywords": "QQ,邮箱"}
+  - {"icon": "java_se8", "name": "Java SE8", "url":"http://docs.oracle.com/javase/8/docs/api/", "keywords": "JAVA,API"}
+  - {"icon": "java_ee7", "name": "Java EE7", "url":"http://docs.oracle.com/javaee/7/api/", "keywords": "JAVA,EE,API"}
+  - {"icon": "jquery", "name": "jQuery", "url":"https://jquery.cuishifeng.cn/", "keywords": "JQUERY"}
+  - {"icon": "tomcat_8", "name": "Tomcat8 API", "url":"http://tomcat.apache.org/tomcat-8.0-doc/api/index.html", "keywords": "TOMCAT,API"}
+  - {"icon": "jdom", "name": "JDOM", "url":"http://www.jdom.org/docs/apidocs/index.html", "keywords": "JDOM,API,XML"}
+  - {"icon": "maven_repository", "name": "MAVEN REPOSITORY", "url":"https://mvnrepository.com/", "keywords": "MAVEN,REPOSITORY"}
+  - {"icon": "log4j", "name": "LOG4J", "url":"https://logging.apache.org/log4j/2.x/log4j-api/apidocs/index.html", "keywords": "LOG4J,API"}
+  - {"icon": "httpcomponents", "name": "HTTPCOMPONENTS", "url":"http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/", "keywords": "HTTP"}
+  - {"icon": "httpclient", "name": "HttpClient", "url":"http://hc.apache.org/httpclient-3.x/apidocs/overview-summary.html", "keywords": "HTTPCLIENT"}
+  - {"icon": "spring_api", "name": "Spring", "url":"https://docs.spring.io/spring-framework/docs/current/javadoc-api/", "keywords": "spring"}
+  - {"icon": "poj", "name": "POJ", "url":"http://poj.org/", "keywords": "POJ,刷题"}
