@@ -48,7 +48,16 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.10</version>
         </dependency>
+
+        <dependency>
+            <groupId>tdh-core</groupId>
+            <artifactId>tdh-core</artifactId>
+            <version>1.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/tdh-core-1.0.1.jar</systemPath>
+        </dependency>
     </dependencies>
+
 
     <build>
     </build>
