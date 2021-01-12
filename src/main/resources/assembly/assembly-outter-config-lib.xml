@@ -14,14 +14,14 @@
             <source>lib\des-core-1.0.1.jar</source>
             <outputDirectory>\lib</outputDirectory>
         </file>
-        <!-- 这个是将maven-jar-plugin打的jar包放到zip包的根目录 -->
+        <!-- 这个是将maven-jar-plugin打的jar包放到zip包的根目录, 因为pom.xml里有重置了finalName所以这里用${project.artifactId},否则这个名字里还有版本号 -->
         <file>
             <source>${project.build.directory}/${project.artifactId}.jar</source>
             <outputDirectory>\</outputDirectory>
         </file>
     </files>
     <fileSets>
-        <!-- fileSet针对的是文件夹:
+        <!-- fileSet针对的是文件夹或多个文件:
             1:将需要外置的配置文件拷贝到jar包同级目录
             2:如果include的值是config那么只会copy这个文件夹,不会copy里面的子文件夹和内容; 必须要加斜杠
         -->

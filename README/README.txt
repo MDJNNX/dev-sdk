@@ -21,7 +21,9 @@ dev-sdk-jar-with-dependencies.zip
 方式一:maven-jar-plugin + maven-assembly-plugin
 详见:assembly-outter-config-lib_pom.xml + src/main/resources/assembly/assembly-outter-config-lib.xml
 描述:这种方式使用:maven-jar-plugin先打包生成manifest.mf;(注意,非maven管理的第三方本地jar包,不会自动加到manifest.mf的class-path中, 需要手动处理)
-                  maen-assembly-plugin;负责根据描述打包文件将配置文件和依赖包放到和jar包同级然后一起打包为zip包;但是要注意第三方非maven管理的本地jar包需要单独处理
+                  maven-assembly-plugin;负责根据描述打包文件将配置文件和依赖包放到和jar包同级然后一起打包为zip包;但是要注意第三方非maven管理的本地jar包需要单独处理
+                  这里maven-assembly-plugin打包还是依赖maven-jar-plugin, 而且mvn package的话, 始终会执行maven-jar-plugin来打包;
+                  直接mvn assembly:single的话, 没试成功过;(对应pom.xml中maven-assembly-plugin的archive节点无法生成manifest.mf)
 打包结果:压缩包结构和上面描述的一模一样;
 
 方式二:maven-jar-plugin + maven-resources-plugin + maven-dependency-plugin

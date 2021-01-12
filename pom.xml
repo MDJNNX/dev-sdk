@@ -52,7 +52,63 @@
         </dependency>
     </dependencies>
 
-    <build>
 
+    <build>
+        <finalName>dev-sdk</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.satan.DevSdkApplication</mainClass>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>lib/des-core-1.0.1.jar .</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                    <!-- 打包时,不包含外置的和不需要的配置文件 -->
+                    <excludes>
+                        <exclude>config\</exclude>
+                        <exclude>assembly\</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/resources/assembly/assembly-outter-config-lib.xml</descriptor>
+                    </descriptors>
+                    <!-- assembly这里添加archive节点并不能在zip包的jar包里生成manifest.mf文件... -->
+                    <!--                    <archive>-->
+                    <!--                        <manifest>-->
+                    <!--                            <addClasspath>true</addClasspath>-->
+                    <!--                            <classpathPrefix>lib</classpathPrefix>-->
+                    <!--                            <mainClass>com.satan.DevSdkApplication</mainClass>-->
+                    <!--                        </manifest>-->
+                    <!--                        <manifestEntries>-->
+                    <!--                            <Class-Path>lib/des-core-1.0.1.jar .</Class-Path>-->
+                    <!--                        </manifestEntries>-->
+                    <!--                    </archive>-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- 绑定到package生命周期 -->
+                        <phase>package</phase>
+                        <goals>
+                            <!-- 执行一次 -->
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
