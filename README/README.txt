@@ -41,5 +41,5 @@ dev-sdk-jar-with-dependencies.zip
           - maven-archiver
           - maven-status
           - static
-          - dev-sdk-1.0-SNAPSHOT.jar    (需要:可执行jar包)
+          - dev-sdk.jar    (需要:可执行jar包)
 交付的时候, 将这三个需要的文件打包即可;

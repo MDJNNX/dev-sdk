@@ -54,6 +54,7 @@
 
 
     <build>
+        <!-- 这里重新指定了jar包名 -->
         <finalName>dev-sdk</finalName>
         <plugins>
             <plugin>
@@ -86,16 +87,16 @@
                         <descriptor>src/main/resources/assembly/assembly-outter-config-lib.xml</descriptor>
                     </descriptors>
                     <!-- assembly这里添加archive节点并不能在zip包的jar包里生成manifest.mf文件... -->
-                    <!--                    <archive>-->
-                    <!--                        <manifest>-->
-                    <!--                            <addClasspath>true</addClasspath>-->
-                    <!--                            <classpathPrefix>lib</classpathPrefix>-->
-                    <!--                            <mainClass>com.satan.DevSdkApplication</mainClass>-->
-                    <!--                        </manifest>-->
-                    <!--                        <manifestEntries>-->
-                    <!--                            <Class-Path>lib/des-core-1.0.1.jar .</Class-Path>-->
-                    <!--                        </manifestEntries>-->
-                    <!--                    </archive>-->
+<!--                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib</classpathPrefix>
+                            <mainClass>com.satan.DevSdkApplication</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>lib/des-core-1.0.1.jar .</Class-Path>
+                        </manifestEntries>
+                    </archive>-->
                 </configuration>
                 <executions>
                     <execution>
