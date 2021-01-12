@@ -61,7 +61,7 @@ public class MainPaneController {
      */
     private void setConsoleIcon() {
         //设置console图标
-        Image btnImg = new Image("images/console.png");
+        Image btnImg = new Image("config/images/console.png");
         ImageView imageView = new ImageView(btnImg);
         consoleBtn.setGraphic(imageView);
     }
@@ -139,14 +139,14 @@ public class MainPaneController {
         }
         switch (menuItem.getId()) {
             case "bjm":
-                menuFxmlPath = "/fxml/EncodeAndDecodePane.fxml";
+                menuFxmlPath = "/static/fxml/EncodeAndDecodePane.fxml";
                 break;
             case "online":
-                menuFxmlPath = "/fxml/OnlineWebsitesPane.fxml";
+                menuFxmlPath = "/static/fxml/OnlineWebsitesPane.fxml";
                 break;
             case "jsonFormat":
             default:
-                menuFxmlPath = "/fxml/JsonFormatPane.fxml";
+                menuFxmlPath = "/static/fxml/JsonFormatPane.fxml";
                 break;
 
         }

@@ -42,7 +42,7 @@ public class OnlineWebsitesController {
      */
     private void renderWebSitesListPane() {
         Yaml yaml = new Yaml();
-        OnlineWebsites websites = yaml.loadAs(getClass().getResourceAsStream("/config/websites.yml"), OnlineWebsites.class);
+        OnlineWebsites websites = yaml.loadAs(getClass().getResourceAsStream("/config/website/websites.yml"), OnlineWebsites.class);
         int columnSize = 5;
         int rowIndex = 0;
         int websitesNum = websites.getWebsites().size();
@@ -58,9 +58,9 @@ public class OnlineWebsitesController {
             hyperlink.setVisited(false);
             hyperlink.setOnAction((ActionEvent event) -> loadWebsite(website));
             try {
-                hyperlink.setGraphic(new ImageView(new Image("/images/" + website.getIcon())));
+                hyperlink.setGraphic(new ImageView(new Image("/config/images/" + website.getIcon())));
             } catch (Exception e) {
-                hyperlink.setGraphic(new ImageView(new Image("/images/default.png")));
+                hyperlink.setGraphic(new ImageView(new Image("/config/images/default.png")));
             }
             System.out.println("name:" + website.getName() + ",columnIndex:" + columnIndex + ",rowIndex:" + rowIndex);
             websiteListPane.add(hyperlink, columnIndex, rowIndex);
@@ -75,7 +75,7 @@ public class OnlineWebsitesController {
      */
     private void loadWebsite(Website website) {
         try {
-            VBox websiteViewPane = FXMLLoader.load(getClass().getResource("/fxml/WebsiteViewPane.fxml"));
+            VBox websiteViewPane = FXMLLoader.load(getClass().getResource("/static/fxml/WebsiteViewPane.fxml"));
             WebView browser = new WebView();
             PaneUtil.getWebsiteViewPane().getChildren().removeAll();
             PaneUtil.getWebsiteViewPane().getChildren().add(browser);

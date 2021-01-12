@@ -1,0 +1,51 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+    <id>jar-with-dependencies</id>
+    <!-- 打包成一个zip压缩包, 将配置文件config目录外置和jar包同级,但static目录内置于jar包内 -->
+    <formats>
+        <format>zip</format>
+    </formats>
+    <!-- 不生成baseDirectory目录 -->
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <files>
+        <!-- 手动将非maven管理的本地依赖copy到根目录的lib包中 -->
+        <file>
+            <source>lib\des-core-1.0.1.jar</source>
+            <outputDirectory>\lib</outputDirectory>
+        </file>
+        <!-- 这个是将maven-jar-plugin打的jar包放到zip包的根目录 -->
+        <file>
+            <source>${project.build.directory}/${project.artifactId}.jar</source>
+            <outputDirectory>\</outputDirectory>
+        </file>
+    </files>
+    <fileSets>
+        <!-- fileSet针对的是文件夹:
+            1:将需要外置的配置文件拷贝到jar包同级目录
+            2:如果include的值是config那么只会copy这个文件夹,不会copy里面的子文件夹和内容; 必须要加斜杠
+        -->
+        <fileSet>
+            <directory>${project.build.directory}\classes</directory>
+            <includes>
+                <include>config\</include>
+            </includes>
+            <outputDirectory>\</outputDirectory>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <!--
+            1:将maven管理的依赖以jar包的方式copy到根目录的lib文件夹里;unpack为false
+            2:\lib包中排除dev-sdk-1.0-SNAPSHOT.jar包; 格式:groupId:artifactId
+         -->
+        <dependencySet>
+            <excludes>
+                <exclude>*:${project.artifactId}</exclude>
+            </excludes>
+            <outputDirectory>\lib</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <unpack>false</unpack>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+</assembly>

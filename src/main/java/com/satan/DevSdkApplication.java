@@ -23,10 +23,10 @@ public class DevSdkApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        BorderPane rootLayout = FXMLLoader.load(getClass().getResource("/fxml/MainPane.fxml"));
+        BorderPane rootLayout = FXMLLoader.load(getClass().getResource("/static/fxml/MainPane.fxml"));
         PaneUtil.setStage(primaryStage);
         PaneUtil.setRootLayout(rootLayout);
-        primaryStage.getIcons().add(new Image("/images/logo.jpg"));
+        primaryStage.getIcons().add(new Image("/config/images/logo.jpg"));
         primaryStage.setTitle("Mdj-开发工具");
         Scene scene = new Scene(rootLayout, WIDTH, HEIGHT);
         primaryStage.setScene(scene);
