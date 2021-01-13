@@ -9,11 +9,11 @@
     <!-- 不生成baseDirectory目录 -->
     <includeBaseDirectory>false</includeBaseDirectory>
     <files>
-        <!-- 手动将非maven管理的本地依赖copy到根目录的lib包中 -->
-        <file>
-            <source>lib\des-core-1.0.1.jar</source>
-            <outputDirectory>\lib</outputDirectory>
-        </file>
+        <!-- 手动将非maven管理的本地依赖copy到根目录的lib包中,也可以使用下面的dependencySet.scope=system方式来复制jar包 -->
+        <!--        <file>-->
+        <!--            <source>lib\des-core-1.0.1.jar</source>-->
+        <!--            <outputDirectory>\lib</outputDirectory>-->
+        <!--        </file>-->
         <!-- 这个是将maven-jar-plugin打的jar包放到zip包的根目录, 因为pom.xml里有重置了finalName所以这里用${project.artifactId},否则这个名字里还有版本号 -->
         <file>
             <source>${project.build.directory}/${project.artifactId}.jar</source>
@@ -34,16 +34,24 @@
         </fileSet>
     </fileSets>
     <dependencySets>
-        <!--
-            1:将maven管理的依赖以jar包的方式copy到根目录的lib文件夹里;unpack为false
-            2:\lib包中排除dev-sdk-1.0-SNAPSHOT.jar包; 格式:groupId:artifactId
-         -->
+        <!-- 将本地非maven管理的jar包copy到\lib目录 -->
         <dependencySet>
-            <excludes>
-                <exclude>*:${project.artifactId}</exclude>
-            </excludes>
+            <!-- 这个原本是为了将maven-jar-plugin生成的dev-sdk.jar包排除掉,但后来发现可以使用userProjectArtifact=false来做 -->
+<!--            <excludes>-->
+<!--                <exclude>*:${project.artifactId}</exclude>-->
+<!--            </excludes>-->
             <outputDirectory>\lib</outputDirectory>
-            <useProjectArtifact>true</useProjectArtifact>
+            <useProjectArtifact>false</useProjectArtifact>
+            <unpack>false</unpack>
+            <scope>system</scope>
+        </dependencySet>
+        <!-- 将maven管理的依赖以jar包的方式copy到根目录的lib文件夹里;unpack为false -->
+        <dependencySet>
+<!--            <excludes>-->
+<!--                <exclude>*:${project.artifactId}</exclude>-->
+<!--            </excludes>-->
+            <outputDirectory>\lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
             <unpack>false</unpack>
             <scope>runtime</scope>
         </dependencySet>

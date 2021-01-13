@@ -27,7 +27,7 @@ dev-sdk-jar-with-dependencies.zip
 打包结果:压缩包结构和上面描述的一模一样;
 
 方式二:maven-jar-plugin + maven-resources-plugin + maven-dependency-plugin
-详见:
+详见:outter-config-lib_pom.xml
 描述:这种方式是maven-jar-plugin负责打包生成manifest.mf;(注意,非maven管理的第三方本地jar包,不会自动加到manifest.mf的class-path中, 需要手动处理)
                maven-resources-plugin负责将外置的资源
                maven-dependency-plugin负责将依赖jar包复制到lib包里(这里会将非maven管理的第三方管理的本地jar包也复制到lib目录里)
@@ -43,3 +43,17 @@ dev-sdk-jar-with-dependencies.zip
           - static
           - dev-sdk.jar    (需要:可执行jar包)
 交付的时候, 将这三个需要的文件打包即可;
+
+----------------------------------------------- 第二种打包需求(配置和依赖包内置): -----------------------------------------------
+方式一:maven-assembly-plugin(本地jar包+maven管理的jar包)
+详见:src/main/resources/assembly/assembly-inner-config-lib.xml + assembly-innser-config-lib_pom.xml
+描述:直接生成jar包, 所有配置及依赖包都打入了jar包里;(所有jar包都时解压状态,非解压的依赖包如果单独放在jar包里的lib目录下, class-path无法指定)
+
+方式二:maven-assembly-plugin(maven管理的jar包, 第三方的本地jar包需要安装到本地仓库)
+前提:如果jar包全是maven管理的, 那么直接使用assembly插件默认的descriptorRef就可以了, 不需要自己写assembly描述文件;
+描述:直接生成jar包, 所有配置及依赖包都打入了jar包里;(所有jar包都时解压状态)
+
+附:将第三方本地jar包安装到本地仓库的方法:
+最好直接切到jar包所在目录, 这样-Dfile参数就可以直接指定jar包, 不需要带路径了;
+D:\_intellij\dev-sdk\lib>mvn install:install-file -DgroupId=com.satan  -DartifactId=des-core -Dversion=1.0.1 -Dpackaging=jar -Dfile=des-core-1.0.1.jar
+然后pom.xml里该依赖就不需要用scope=system和systemPath标签了;
