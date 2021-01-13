@@ -54,6 +54,7 @@
 
 
     <build>
+        <finalName>dev-sdk</finalName>
         <plugins>
             <!-- jar打包插件:
                  addClasspath:true会自动生成manifest.mf文件,并添加Class-Path,指定class-path的前缀

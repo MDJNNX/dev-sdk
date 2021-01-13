@@ -7,6 +7,13 @@
     </formats>
     <!-- 不生成baseDirectory目录 -->
     <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <!-- 将编译的class文件和资源文件拷贝到jar包里 -->
+        <fileSet>
+            <directory>${project.build.directory}\classes</directory>
+            <outputDirectory>\</outputDirectory>
+        </fileSet>
+    </fileSets>
     <dependencySets>
         <dependencySet>
             <outputDirectory>\</outputDirectory>

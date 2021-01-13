@@ -44,7 +44,7 @@
         </dependency>
 
         <dependency>
-            <groupId>des-core</groupId>
+            <groupId>com.satan</groupId>
             <artifactId>des-core</artifactId>
             <version>1.0.1</version>
             <scope>system</scope>
@@ -59,44 +59,20 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>com.satan.DevSdkApplication</mainClass>
-                            <classpathPrefix>lib/</classpathPrefix>
-                        </manifest>
-                        <manifestEntries>
-                            <Class-Path>lib/des-core-1.0.1.jar .</Class-Path>
-                        </manifestEntries>
-                    </archive>
-                    <!-- 打包时,不包含外置的和不需要的配置文件 -->
-                    <excludes>
-                        <exclude>config\</exclude>
-                        <exclude>assembly\</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
                     <descriptors>
-                        <descriptor>src/main/resources/assembly/assembly-outter-config-lib.xml</descriptor>
+                        <descriptor>src/main/resources/assembly/assembly-inner-config-lib.xml</descriptor>
                     </descriptors>
                     <!-- assembly这里添加archive节点并不能在zip包的jar包里生成manifest.mf文件... -->
-                    <!--                    <archive>-->
-                    <!--                        <manifest>-->
-                    <!--                            <addClasspath>true</addClasspath>-->
-                    <!--                            <classpathPrefix>lib</classpathPrefix>-->
-                    <!--                            <mainClass>com.satan.DevSdkApplication</mainClass>-->
-                    <!--                        </manifest>-->
-                    <!--                        <manifestEntries>-->
-                    <!--                            <Class-Path>lib/des-core-1.0.1.jar .</Class-Path>-->
-                    <!--                        </manifestEntries>-->
-                    <!--                    </archive>-->
+                    <archive>
+                        <manifest>
+                            <!-- 因为所有文件都在jar包里,所以不需要添加class-path -->
+                            <!--                            <addClasspath>true</addClasspath>-->
+                            <mainClass>com.satan.DevSdkApplication</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
                 <executions>
                     <execution>

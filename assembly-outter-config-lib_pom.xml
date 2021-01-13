@@ -44,7 +44,7 @@
         </dependency>
 
         <dependency>
-            <groupId>des-core</groupId>
+            <groupId>com.satan</groupId>
             <artifactId>des-core</artifactId>
             <version>1.0.1</version>
             <scope>system</scope>
