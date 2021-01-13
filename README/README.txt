@@ -57,3 +57,6 @@ dev-sdk-jar-with-dependencies.zip
 最好直接切到jar包所在目录, 这样-Dfile参数就可以直接指定jar包, 不需要带路径了;
 D:\_intellij\dev-sdk\lib>mvn install:install-file -DgroupId=com.satan  -DartifactId=des-core -Dversion=1.0.1 -Dpackaging=jar -Dfile=des-core-1.0.1.jar
 然后pom.xml里该依赖就不需要用scope=system和systemPath标签了;
+
+方式三:使用idea的artifact + build进行打包:
+详见:README里的idea-package-jar-exe-config.png图片说明
