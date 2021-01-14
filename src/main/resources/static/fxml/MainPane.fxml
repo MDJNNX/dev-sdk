@@ -27,6 +27,11 @@
                         <MenuItem fx:id="online" mnemonicParsing="false" onAction="#menuClick" text="文档" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="设置">
+              <items>
+                <MenuItem fx:id="setting" mnemonicParsing="false" onAction="#menuClick" text="常用功能" />
+              </items>
+            </Menu>
                 <Menu mnemonicParsing="false" text="帮助">
                     <items>
                         <MenuItem fx:id="about" mnemonicParsing="false" onAction="#menuClick" text="关于" />

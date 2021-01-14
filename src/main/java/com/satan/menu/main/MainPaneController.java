@@ -144,6 +144,9 @@ public class MainPaneController {
             case "online":
                 menuFxmlPath = "/static/fxml/OnlineWebsitesPane.fxml";
                 break;
+            case "setting":
+                menuFxmlPath = "/static/fxml/SettingPane.fxml";
+                break;
             case "jsonFormat":
             default:
                 menuFxmlPath = "/static/fxml/JsonFormatPane.fxml";
