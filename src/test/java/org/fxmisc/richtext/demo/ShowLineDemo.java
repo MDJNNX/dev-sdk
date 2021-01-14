@@ -64,23 +64,23 @@ public class ShowLineDemo extends Application {
         InlineCssTextArea area = new InlineCssTextArea(sb.toString());
         VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(area);
 
-        Function<Integer, Integer> clamp = i -> Math.max(0, Math.min(i, area.getLength() - 1));
-        Button showInViewportButton = createButton("Show line somewhere in Viewport", ae -> {
-            area.showParagraphInViewport(clamp.apply(field.getTextAsInt()));
-        });
-        Button showAtViewportTopButton = createButton("Show line at top of viewport", ae -> {
-            area.showParagraphAtTop(clamp.apply(field.getTextAsInt()));
-        });
-        Button showAtViewportBottomButton = createButton("Show line at bottom of viewport", ae -> {
-            area.showParagraphAtBottom(clamp.apply(field.getTextAsInt()));
-        });
-
-        VBox vbox = new VBox(field, showInViewportButton, showAtViewportTopButton, showAtViewportBottomButton);
-        vbox.setAlignment(Pos.CENTER);
+//        Function<Integer, Integer> clamp = i -> Math.max(0, Math.min(i, area.getLength() - 1));
+//        Button showInViewportButton = createButton("Show line somewhere in Viewport", ae -> {
+//            area.showParagraphInViewport(clamp.apply(field.getTextAsInt()));
+//        });
+//        Button showAtViewportTopButton = createButton("Show line at top of viewport", ae -> {
+//            area.showParagraphAtTop(clamp.apply(field.getTextAsInt()));
+//        });
+//        Button showAtViewportBottomButton = createButton("Show line at bottom of viewport", ae -> {
+//            area.showParagraphAtBottom(clamp.apply(field.getTextAsInt()));
+//        });
+//
+//        VBox vbox = new VBox(field, showInViewportButton, showAtViewportTopButton, showAtViewportBottomButton);
+//        vbox.setAlignment(Pos.CENTER);
 
         BorderPane root = new BorderPane();
         root.setCenter(vsPane);
-        root.setBottom(vbox);
+//        root.setBottom(vbox);
 
         Scene scene = new Scene(root, 700, 500);
         primaryStage.setScene(scene);

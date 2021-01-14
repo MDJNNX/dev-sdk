@@ -44,7 +44,7 @@ public class TextHyperlinkArea extends GenericStyledArea<Void, Either<String, Hy
         );
 
         getStyleClass().add("text-hyperlink-area");
-        getStylesheets().add(TextHyperlinkArea.class.getResource("text-hyperlink-area.css").toExternalForm());
+        getStylesheets().add(TextHyperlinkArea.class.getResource("/text-hyperlink-area.css").toExternalForm());
     }
 
     public void appendWithLink(String displayedText, String link) {

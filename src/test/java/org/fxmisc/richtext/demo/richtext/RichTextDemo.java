@@ -181,20 +181,8 @@ public class RichTextDemo extends Application {
 
     private final SuspendableNo updatingToolbar = new SuspendableNo();
 
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        HTMLEditor htmlEditor = new HTMLEditor();
-
-        VBox vBox = new VBox(htmlEditor);
-        Scene scene = new Scene(vBox);
-
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("JavaFX App");
-
-        primaryStage.show();
-    }
-
-    /*    @Override
     public void start(Stage primaryStage) {
         mainStage = primaryStage;
 
@@ -407,12 +395,12 @@ public class RichTextDemo extends Application {
         vbox.getChildren().addAll(toolBar1, toolBar2, vsPane);
 
         Scene scene = new Scene(vbox, 600, 400);
-        scene.getStylesheets().add(RichTextDemo.class.getResource("rich-text.css").toExternalForm());
+        scene.getStylesheets().add(RichTextDemo.class.getResource("/rich-text.css").toExternalForm());
         primaryStage.setScene(scene);
         area.requestFocus();
         primaryStage.setTitle("Rich Text Demo");
         primaryStage.show();
-    }*/
+    }
 
 
     private Button createButton(String styleClass, Runnable action, String toolTip) {
