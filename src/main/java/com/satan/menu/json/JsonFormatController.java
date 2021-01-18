@@ -1,10 +1,8 @@
 package com.satan.menu.json;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.satan.menu.common.BaseMenu;
-import com.satan.menu.common.ConsoleLog;
+import com.satan.menu.json.handler.CompressHandler;
+import com.satan.menu.json.handler.JsonHandler;
 import com.satan.menu.main.IStageResizeObserver;
 import com.satan.util.PaneUtil;
 import javafx.beans.value.ObservableValue;
@@ -18,7 +16,7 @@ import javafx.scene.layout.HBox;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
-import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * @Description: json格式化
@@ -27,29 +25,68 @@ import java.text.MessageFormat;
  */
 public class JsonFormatController extends BaseMenu implements IStageResizeObserver {
 
+    @FXML
+    private HBox rawJsonPane;
+
     /**
      * 转换规则下拉选择框
      */
     @FXML
     private ComboBox convertorComboBox;
 
-    private CodeArea rawJsonCodeArea;
+    private CodeArea rawCodeArea;
 
-    private CodeArea retJsonCodeArea;
+    private CodeArea retCodeArea;
 
+    /**
+     * 操作按钮列表面板
+     */
     @FXML
-    private HBox rawJsonPane;
+    private HBox operateBtnsPane;
+
+    /**
+     * 格式化按钮
+     */
+    @FXML
+    private Button formatBtn;
+
+    /**
+     * 转换按钮
+     */
+    @FXML
+    private Button convertBtn;
+
+    /**
+     * 反转按钮
+     */
+    @FXML
+    private Button reverseConvertBtn;
+
+    /**
+     * 压缩按钮
+     */
+    @FXML
+    private Button compressBtn;
+
+    /**
+     * 去除转义按钮
+     */
+    @FXML
+    private Button noescapeBtn;
+
+    private static Map<String, List<Button>> btnMaps = new HashMap<>();
+    private static Set<Button> allBtns = new HashSet<>();
 
     public JsonFormatController() {
-        rawJsonCodeArea = new CodeArea();
-        rawJsonCodeArea.setWrapText(true);
-        rawJsonCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(rawJsonCodeArea));
-        rawJsonCodeArea.getStyleClass().add("two-left-padding");
+        rawCodeArea = new CodeArea();
+        rawCodeArea.setWrapText(true);
+        rawCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(rawCodeArea));
+        rawCodeArea.getStyleClass().add("two-left-padding");
 
-        retJsonCodeArea = new CodeArea();
-        retJsonCodeArea.setWrapText(true);
-        retJsonCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(retJsonCodeArea));
-        retJsonCodeArea.getStyleClass().add("two-left-padding");
+        retCodeArea = new CodeArea();
+        retCodeArea.setWrapText(true);
+        retCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(retCodeArea));
+        retCodeArea.getStyleClass().add("two-left-padding");
     }
 
     /**
@@ -59,52 +96,66 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
     @FXML
     @SuppressWarnings("unchecked")
     private void initialize() {
-        ObservableList<String> options = FXCollections.observableArrayList("XML-XML", "JSON-JSON", "JSON-XML");
+        ObservableList<String> options = FXCollections.observableArrayList("JSON", "XML", "JSON-XML");
         convertorComboBox.setItems(options);
-        convertorComboBox.setValue("JSON-JSON");
+        convertorComboBox.setValue("JSON");
 
         convertorComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
             if (!oldValue.equals(newValue)) {
-                retJsonCodeArea.replaceText("");
+                retCodeArea.replaceText("");
             }
+            showBtns((String)newValue);
         });
+
+        initBtnVisibleProperty();
+        showBtns("JSON");
+
 
         PaneUtil.getStageResizeObservers().add(this);
         setSize(PaneUtil.getStage().getWidth(), PaneUtil.getStage().getHeight());
-        rawJsonPane.getChildren().addAll(rawJsonCodeArea, retJsonCodeArea);
+        rawJsonPane.getChildren().addAll(rawCodeArea, retCodeArea);
     }
 
     /**
-     * jackson 格式化代码:
-     * ObjectMapper mapper = new ObjectMapper();
-     * Object obj = mapper.readValue(rawJsonText, Object.class);
-     * retJsonText = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+     * 初始化按钮的可见性
      */
-    public void jsonFormat(ActionEvent event) {
-        String retJsonText;
-        String rawJsonText = "";
-        String btnName = ((Button) event.getSource()).getText();
-        try {
-            rawJsonText = rawJsonCodeArea.getText();
-            JSONObject object = JSONObject.parseObject(rawJsonText);
-            retJsonText = JSON.toJSONString(object, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue,
-                    SerializerFeature.WriteDateUseDateFormat);
-        } catch (Exception e) {
-            e.printStackTrace();
-            retJsonText = "json格式化异常:\n" + e.getMessage();
-        }
-        System.out.println(retJsonText);
-        retJsonCodeArea.replaceText(retJsonText);
-        appendToConsole(new ConsoleLog(event.getSource(), MessageFormat.format("action:{0},rawText:{1},retText:{2}", btnName, rawJsonText, retJsonText)));
-
+    private void initBtnVisibleProperty() {
+        btnMaps.put("JSON", Arrays.asList(formatBtn, compressBtn, noescapeBtn));
+        btnMaps.put("XML", Arrays.asList(formatBtn, compressBtn, noescapeBtn));
+        btnMaps.put("JSON-XML", Arrays.asList(convertBtn, reverseConvertBtn));
+        allBtns.addAll(Arrays.asList(formatBtn, compressBtn, noescapeBtn, convertBtn, reverseConvertBtn));
+        allBtns.forEach((btn) -> btn.managedProperty().bindBidirectional(btn.visibleProperty()));
     }
 
-    public void jsonPress(ActionEvent event) {
-        String rawJsonText = rawJsonCodeArea.getText();
-        String retJsonText = rawJsonText.replaceAll("\\s+", "");
-        String btnName = ((Button) event.getSource()).getText();
-        retJsonCodeArea.replaceText(retJsonText);
-        appendToConsole(new ConsoleLog(event.getSource(), MessageFormat.format("action:{0},rawText:{1},retText:{2}", btnName, rawJsonText, retJsonText)));
+    /**
+     * 只显示该显示的btn
+     *
+     * @param item 标识:JSON/XML/JSON-XML
+     */
+    private void showBtns(String item) {
+        List<Button> btns = btnMaps.get(item);
+        allBtns.forEach((btn) -> {
+            btn.setVisible(btns.contains(btn));
+            System.out.println("显示:" + btn.getId());
+        });
+    }
+
+    @FXML
+    private void btnClick(ActionEvent event) {
+        String btnId = ((Button) event.getTarget()).getId();
+        String selected = (String) convertorComboBox.getValue();
+        String rawStr = rawCodeArea.getText();
+        String retStr;
+        if (btnId.equals("compressBtn")) {
+            retStr = new CompressHandler().compress(rawStr);
+        } else {
+            if (selected.contains("JSON")) {
+                retStr = new JsonHandler().handle(btnId, selected, rawStr);
+            } else {
+                retStr = "";
+            }
+        }
+        retCodeArea.replaceText(retStr);
     }
 
     /**
@@ -122,7 +173,7 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
      * @param stageHeight 高
      */
     private void setSize(double stageWidth, double stageHeight) {
-        rawJsonCodeArea.setPrefWidth(stageWidth / 2 - 5);
-        retJsonCodeArea.setPrefWidth(stageWidth / 2 - 5);
+        rawCodeArea.setPrefWidth(stageWidth / 2 - 5);
+        retCodeArea.setPrefWidth(stageWidth / 2 - 5);
     }
 }

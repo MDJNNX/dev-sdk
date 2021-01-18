@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="jsonFormatPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.satan.menu.json.JsonFormatController">
+<VBox fx:id="jsonFormatPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.satan.menu.json.JsonFormatController">
     <children>
         <HBox prefHeight="33.0" prefWidth="1162.0" VBox.vgrow="NEVER">
             <children>
@@ -24,17 +24,15 @@
                   <Insets right="5.0" />
                </HBox.margin>
             </ComboBox>
-                <Button fx:id="jsonFormatBtn" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#jsonFormat" text="转换" />
-                <Button mnemonicParsing="false" onAction="#jsonPress" text="压缩" HBox.hgrow="ALWAYS">
-                    <HBox.margin>
-                        <Insets left="5.0" />
-                    </HBox.margin>
-                </Button>
-                <Button mnemonicParsing="false" text="去除转义" HBox.hgrow="ALWAYS">
-                    <HBox.margin>
-                        <Insets left="5.0" />
-                    </HBox.margin>
-                </Button>
+            <HBox fx:id="operateBtns" spacing="5.0">
+               <children>
+                  <Button fx:id="formatBtn" mnemonicParsing="false" onAction="#btnClick" text="格式化" />
+                      <Button fx:id="convertBtn" mnemonicParsing="false" onAction="#btnClick" text="转换" />
+                  <Button fx:id="reverseConvertBtn" layoutX="67.0" layoutY="10.0" mnemonicParsing="false" onAction="#btnClick" text="反转" />
+                      <Button fx:id="compressBtn" mnemonicParsing="false" onAction="#btnClick" text="压缩" />
+                      <Button fx:id="noescapeBtn" mnemonicParsing="false" onAction="#btnClick" text="去除转义" />
+               </children>
+            </HBox>
             </children>
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

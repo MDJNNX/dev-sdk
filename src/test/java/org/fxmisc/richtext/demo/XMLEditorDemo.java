@@ -77,9 +77,11 @@ public class XMLEditorDemo extends Application {
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
 
         codeArea.textProperty().addListener((obs, oldText, newText) -> {
-            codeArea.setStyleSpans(0, computeHighlighting(newText));
+//            codeArea.setStyleSpans(0, computeHighlighting(newText));
         });
-        codeArea.replaceText(0, 0, sampleCode);
+//        codeArea.replaceText(0, 0, sampleCode);
+		codeArea.insertText(0, "hello");
+		codeArea.insertText(5, "world");
 
 		Scene scene = new Scene(new StackPane(new VirtualizedScrollPane<>(codeArea)), 600, 400);
         scene.getStylesheets().add(XMLEditorDemo.class.getResource("/xml-highlighting.css").toExternalForm());
