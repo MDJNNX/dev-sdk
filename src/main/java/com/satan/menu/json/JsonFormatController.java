@@ -7,11 +7,16 @@ import com.satan.menu.common.BaseMenu;
 import com.satan.menu.common.ConsoleLog;
 import com.satan.menu.main.IStageResizeObserver;
 import com.satan.util.PaneUtil;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 
 import java.text.MessageFormat;
 
@@ -22,26 +27,51 @@ import java.text.MessageFormat;
  */
 public class JsonFormatController extends BaseMenu implements IStageResizeObserver {
 
+    /**
+     * 转换规则下拉选择框
+     */
+    @FXML
+    private ComboBox convertorComboBox;
+
+    private CodeArea rawJsonCodeArea;
+
+    private CodeArea retJsonCodeArea;
+
     @FXML
     private HBox rawJsonPane;
 
-    @FXML
-    private TextArea rawJsonTextArea;
+    public JsonFormatController() {
+        rawJsonCodeArea = new CodeArea();
+        rawJsonCodeArea.setWrapText(true);
+        rawJsonCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(rawJsonCodeArea));
+        rawJsonCodeArea.getStyleClass().add("two-left-padding");
 
-    @FXML
-    private HBox formatJsonPane;
-
-    @FXML
-    private TextArea retJsonTextArea;
+        retJsonCodeArea = new CodeArea();
+        retJsonCodeArea.setWrapText(true);
+        retJsonCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(retJsonCodeArea));
+        retJsonCodeArea.getStyleClass().add("two-left-padding");
+    }
 
     /**
      * 初始化
      * 设置初始大小时,需要同时设置代码和界面的HBox的Vgrow为Always
      */
     @FXML
+    @SuppressWarnings("unchecked")
     private void initialize() {
+        ObservableList<String> options = FXCollections.observableArrayList("XML-XML", "JSON-JSON", "JSON-XML");
+        convertorComboBox.setItems(options);
+        convertorComboBox.setValue("JSON-JSON");
+
+        convertorComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
+            if (!oldValue.equals(newValue)) {
+                retJsonCodeArea.replaceText("");
+            }
+        });
+
         PaneUtil.getStageResizeObservers().add(this);
         setSize(PaneUtil.getStage().getWidth(), PaneUtil.getStage().getHeight());
+        rawJsonPane.getChildren().addAll(rawJsonCodeArea, retJsonCodeArea);
     }
 
     /**
@@ -50,13 +80,12 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
      * Object obj = mapper.readValue(rawJsonText, Object.class);
      * retJsonText = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
      */
-    @FXML
     public void jsonFormat(ActionEvent event) {
         String retJsonText;
         String rawJsonText = "";
         String btnName = ((Button) event.getSource()).getText();
         try {
-            rawJsonText = rawJsonTextArea.getText();
+            rawJsonText = rawJsonCodeArea.getText();
             JSONObject object = JSONObject.parseObject(rawJsonText);
             retJsonText = JSON.toJSONString(object, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue,
                     SerializerFeature.WriteDateUseDateFormat);
@@ -65,19 +94,17 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
             retJsonText = "json格式化异常:\n" + e.getMessage();
         }
         System.out.println(retJsonText);
-        retJsonTextArea.setText(retJsonText);
+        retJsonCodeArea.replaceText(retJsonText);
         appendToConsole(new ConsoleLog(event.getSource(), MessageFormat.format("action:{0},rawText:{1},retText:{2}", btnName, rawJsonText, retJsonText)));
 
     }
 
-    @FXML
     public void jsonPress(ActionEvent event) {
-        String rawJsonText = rawJsonTextArea.getText();
+        String rawJsonText = rawJsonCodeArea.getText();
         String retJsonText = rawJsonText.replaceAll("\\s+", "");
         String btnName = ((Button) event.getSource()).getText();
-        retJsonTextArea.setText(retJsonText);
+        retJsonCodeArea.replaceText(retJsonText);
         appendToConsole(new ConsoleLog(event.getSource(), MessageFormat.format("action:{0},rawText:{1},retText:{2}", btnName, rawJsonText, retJsonText)));
-
     }
 
     /**
@@ -85,7 +112,6 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
      */
     @Override
     public void resize(double width, double height) {
-        System.out.println("JsonFormatController resize");
         setSize(width, height);
     }
 
@@ -96,8 +122,7 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
      * @param stageHeight 高
      */
     private void setSize(double stageWidth, double stageHeight) {
-        rawJsonPane.setPrefWidth(stageWidth / 2 - 5);
-        rawJsonTextArea.setPrefWidth(rawJsonPane.getWidth() - 5);
-        formatJsonPane.setPrefWidth(stageWidth / 2 - 5);
+        rawJsonCodeArea.setPrefWidth(stageWidth / 2 - 5);
+        retJsonCodeArea.setPrefWidth(stageWidth / 2 - 5);
     }
 }

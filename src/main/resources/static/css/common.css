@@ -1,0 +1,11 @@
+.two-left-padding {
+    -fx-padding: 5 ;
+    -fx-border-radius: 1;
+    -fx-border-color: lightgrey;
+}
+
+.two-right-padding {
+    -fx-padding: 5 ;
+    -fx-border-radius: 1;
+    -fx-border-color: lightgrey;
+}

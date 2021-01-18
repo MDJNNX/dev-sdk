@@ -3,15 +3,18 @@ package com.satan.menu.bjm;
 import com.satan.menu.bjm.algandler.EncodeAndDecodeHandlerFactory;
 import com.satan.menu.common.BaseMenu;
 import com.satan.menu.common.ConsoleLog;
+import com.satan.util.PaneUtil;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 
 import java.text.MessageFormat;
+import java.util.function.BiFunction;
 
 public class EncodeAndDecodeController extends BaseMenu {
 
@@ -21,17 +24,32 @@ public class EncodeAndDecodeController extends BaseMenu {
     @FXML
     private ComboBox algComboBox;
 
+    @FXML
+    private HBox encodeAndDecodePane;
+
     /**
      * 原始文本
      */
-    @FXML
-    private TextArea rawTextArea;
+    private CodeArea rawCodeArea;
 
     /**
      * 转换后文本
      */
-    @FXML
-    private TextArea retTextArea;
+    private CodeArea retCodeArea;
+
+    public EncodeAndDecodeController() {
+        rawCodeArea = new CodeArea();
+        rawCodeArea.setWrapText(true);
+        rawCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(rawCodeArea));
+        rawCodeArea.getStyleClass().add("two-left-padding");
+        rawCodeArea.requestFocus();
+
+        retCodeArea = new CodeArea();
+        retCodeArea.setWrapText(true);
+        retCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(rawCodeArea));
+        retCodeArea.getStyleClass().add("two-left-padding");
+        retCodeArea.requestFocus();
+    }
 
     /**
      * 初始化
@@ -45,39 +63,51 @@ public class EncodeAndDecodeController extends BaseMenu {
 
         algComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
             if (!oldValue.equals(newValue)) {
-                retTextArea.setText("");
+                retCodeArea.replaceText("");
             }
         });
-
+        setSize(PaneUtil.getStage().getWidth(), PaneUtil.getStage().getHeight());
+        encodeAndDecodePane.getChildren().addAll(rawCodeArea, retCodeArea);
     }
 
     @FXML
     public void clear() {
-        rawTextArea.setText("");
-        retTextArea.setText("");
+        rawCodeArea.replaceText("");
+        retCodeArea.replaceText("");
     }
 
     @FXML
-    public void encode(ActionEvent event) {
+    public void encode() {
+        operate((alg, rawText) -> EncodeAndDecodeHandlerFactory.getHandler(alg).encode(rawText));
+    }
+
+    @FXML
+    public void decode() {
+        operate((alg, rawText) -> EncodeAndDecodeHandlerFactory.getHandler(alg).decode(rawText));
+    }
+
+    /**
+     * 计算方法
+     *
+     * @param fun 函数
+     */
+    private void operate(BiFunction<String, String, String> fun) {
         String alg = (String) algComboBox.getValue();
-        String rawText = rawTextArea.getText();
-        String retText = com.satan.menu.bjm.algandler.EncodeAndDecodeHandlerFactory.getHandler(alg).encode(rawText);
-        retTextArea.setText(retText);
-        appendToConsole(new ConsoleLog(event.getSource(), MessageFormat.format("alg:{0},rawText:{1},retText:{2}", alg, rawText, retText)));
-    }
-
-    @FXML
-    public void decode(ActionEvent event) {
-        String alg = (String) algComboBox.getValue();
-        String rawText = rawTextArea.getText();
-        String retText = EncodeAndDecodeHandlerFactory.getHandler((String) algComboBox.getValue()).decode(rawText);
-        retTextArea.setText(retText);
-        appendToConsole(new ConsoleLog(event.getSource(), MessageFormat.format("alg:{0},rawText:{1},retText:{2}", alg, rawText, retText)));
+        String rawText = rawCodeArea.getText();
+        String retText = fun.apply(alg, rawText);
+        retCodeArea.replaceText(retText);
+        appendToConsole(new ConsoleLog(null, MessageFormat.format("算法:{0},原文本:{1},结果:{2}", alg, rawText, retText)));
     }
 
 
-    @FXML
-    public void algChanged() {
-        System.out.println("nnn");
+    /**
+     * 调整相关组件块宽度:
+     *
+     * @param stageWidth  宽
+     * @param stageHeight 高
+     */
+    private void setSize(double stageWidth, double stageHeight) {
+        rawCodeArea.setPrefWidth(stageWidth / 2 - 5);
+        retCodeArea.setPrefWidth(stageWidth / 2 - 5);
     }
 }

@@ -29,6 +29,7 @@ public class DevSdkApplication extends Application {
         primaryStage.getIcons().add(new Image("/config/images/logo.jpg"));
         primaryStage.setTitle("Mdj-开发工具");
         Scene scene = new Scene(rootLayout, WIDTH, HEIGHT);
+        scene.getStylesheets().add(getClass().getResource("/static/css/common.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.show();
