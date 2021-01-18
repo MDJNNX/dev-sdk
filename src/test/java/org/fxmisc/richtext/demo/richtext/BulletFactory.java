@@ -9,6 +9,9 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -18,6 +21,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 
 import org.fxmisc.richtext.demo.richtext.RichTextDemo.FoldableStyledArea;
+import org.reactfx.collection.LiveList;
+import org.reactfx.value.Val;
 
 public class BulletFactory implements IntFunction<Node>
 {
@@ -63,7 +68,27 @@ public class BulletFactory implements IntFunction<Node>
             foldIndicator.setContentDisplay( ContentDisplay.RIGHT );
         }
 
+        Val<String> formatted = LiveList.sizeOf(area.getParagraphs()).map((n) -> {
+            return this.format(idx + 1, n);
+        });
+        foldIndicator.setFont(DEFAULT_FONT);
+        foldIndicator.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web("#ddd"), (CornerRadii)null, (Insets)null)}));
+        foldIndicator.setTextFill(Color.web("#666"));
+        foldIndicator.setPadding(new Insets(0.0D, 5.0D, 0.0D, 5.0D));
+        foldIndicator.setAlignment(Pos.TOP_RIGHT);
+        foldIndicator.getStyleClass().add("lineno");
+        foldIndicator.textProperty().bind(formatted.conditionOnShowing(foldIndicator));
+
         return new VBox( 0, foldIndicator );
+    }
+
+    IntFunction<String> format = (digits) -> {
+        return "%1$" + digits + "s";
+    };
+
+    private String format(int x, int max) {
+        int digits = (int)Math.floor(Math.log10((double)max)) + 1;
+        return String.format((String)this.format.apply(digits), x);
     }
 
     private Node createBullet(Indent in) {
