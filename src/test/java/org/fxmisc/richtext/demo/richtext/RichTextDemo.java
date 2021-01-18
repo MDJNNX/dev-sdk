@@ -29,7 +29,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -45,6 +44,7 @@ import org.fxmisc.richtext.model.StyledDocument;
 import org.fxmisc.richtext.model.StyledSegment;
 import org.fxmisc.richtext.model.TextOps;
 import org.reactfx.SuspendableNo;
+import org.reactfx.collection.LiveList;
 import org.reactfx.util.Either;
 import org.reactfx.util.Tuple2;
 
@@ -104,7 +104,28 @@ public class RichTextDemo extends Application {
         }
 
         public void foldSelectedParagraphs() {
-//            foldSelectedParagraphs( getAddFoldStyle() );
+            foldSelectedParagraphs(getAddFoldStyle());
+        }
+
+        public void foldSelectedParagraphs(UnaryOperator<ParStyle> styleMixin) {
+            IndexRange range = getSelection();
+            fold(range.getStart(), range.getEnd(), styleMixin);
+        }
+
+        public void fold(int startPos, int endPos, UnaryOperator<ParStyle> styleMixin) {
+            ReadOnlyStyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle> subDoc;
+            UnaryOperator<Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle>> mapper;
+
+            subDoc = (ReadOnlyStyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle>) subDocument(startPos, endPos);
+            mapper = p -> p.setParagraphStyle(styleMixin.apply(p.getParagraphStyle()));
+
+            for (int p = 1; p < subDoc.getParagraphCount(); p++) {
+                subDoc = subDoc.replaceParagraph(p, mapper).get1();
+            }
+
+            replace(startPos, endPos, subDoc);
+            recreateParagraphGraphic(offsetToPosition(startPos, Bias.Backward).getMajor());
+            moveTo(startPos);
         }
 
         public void foldText(int start, int end) {
@@ -112,7 +133,36 @@ public class RichTextDemo extends Application {
         }
 
         public void unfoldParagraphs(int startingFromPar) {
-//            unfoldParagraphs( startingFromPar, getFoldStyleCheck(), getRemoveFoldStyle() );
+            unfoldParagraphs(startingFromPar, getFoldStyleCheck(), getRemoveFoldStyle());
+        }
+
+        public void unfoldParagraphs(int startingFrom, Predicate<ParStyle> isFolded, UnaryOperator<ParStyle> styleMixin) {
+            LiveList<Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle>> pList = getParagraphs();
+            int to = startingFrom;
+
+            while (++to < pList.size()) {
+                if (!isFolded.test(pList.get(to).getParagraphStyle())) break;
+            }
+
+            if (--to > startingFrom) {
+                ReadOnlyStyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle> subDoc;
+                UnaryOperator<Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle>> mapper;
+
+                int startPos = getAbsolutePosition(startingFrom, 0);
+                int endPos = getAbsolutePosition(to, getParagraphLength(to));
+
+                subDoc = (ReadOnlyStyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle>) subDocument(startPos, endPos);
+                mapper = p -> p.setParagraphStyle(styleMixin.apply(p.getParagraphStyle()));
+
+                for (int p = 1; p < subDoc.getParagraphCount(); p++) {
+                    subDoc = subDoc.replaceParagraph(p, mapper).get1();
+                }
+
+                replace(startPos, endPos, subDoc);
+
+                moveTo(startingFrom, getParagraphLength(startingFrom));
+                recreateParagraphGraphic(startingFrom);
+            }
         }
 
         public void unfoldText(int startingFromPos) {
