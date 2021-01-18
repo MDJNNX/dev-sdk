@@ -24,6 +24,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -596,10 +597,18 @@ public class RichTextDemo extends Application {
         if (selectedFile != null) {
             String imagePath = selectedFile.getAbsolutePath();
             imagePath = imagePath.replace('\\', '/');
+            imagePath = getClass().getResource("/add.png").getPath();
+            System.out.println("imagePath:" + imagePath);
+            RealLinkedImage realImageView = new RealLinkedImage(imagePath, (imageView) -> {
+                imageView.setImage(new Image("/minus.png"));
+                System.out.println("hello --->");
+            });
             ReadOnlyStyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle> ros =
-                    ReadOnlyStyledDocument.fromSegment(Either.right(new RealLinkedImage(imagePath)),
+                    ReadOnlyStyledDocument.fromSegment(Either.right(realImageView),
                             ParStyle.EMPTY, TextStyle.EMPTY, area.getSegOps());
+            area.replaceSelection("hello");
             area.replaceSelection(ros);
+            area.replaceSelection("world");
         }
     }
 

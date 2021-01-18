@@ -1,7 +1,9 @@
 package org.fxmisc.richtext.demo.richtext;
 
 import java.io.File;
+import java.util.function.Consumer;
 
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,6 +17,8 @@ import javafx.scene.image.ImageView;
 public class RealLinkedImage implements LinkedImage {
 
     private final String imagePath;
+    private ImageView imageView;
+    private Consumer<ImageView> clickFun;
 
     /**
      * Creates a new linked image object.
@@ -31,6 +35,11 @@ public class RealLinkedImage implements LinkedImage {
         }
 
         this.imagePath = imagePath;
+    }
+
+    public RealLinkedImage(String imagePath, Consumer<ImageView> clickFun) {
+        this(imagePath);
+        this.clickFun = clickFun;
     }
 
     @Override
@@ -52,7 +61,10 @@ public class RealLinkedImage implements LinkedImage {
     public Node createNode() {
         Image image = new Image("file:" + imagePath); // XXX: No need to create new Image objects each time -
                                                       // could be cached in the model layer
-        ImageView result = new ImageView(image);
-        return result;
+        imageView = new ImageView(image);
+        imageView.setOnMouseClicked(event -> clickFun.accept(imageView));
+        imageView.setCursor(Cursor.HAND);
+        return imageView;
     }
+
 }

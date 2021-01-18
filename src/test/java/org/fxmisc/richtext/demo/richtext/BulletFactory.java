@@ -46,8 +46,7 @@ public class BulletFactory implements IntFunction<Node>
         return createGraphic( ps, value );
     }
 
-    private Node createGraphic( ParStyle ps, int idx )
-    {
+    private Node createGraphic( ParStyle ps, int idx ) {
         Label foldIndicator = new Label( "  " );
         VBox.setVgrow( foldIndicator, Priority.ALWAYS );
         foldIndicator.setMaxHeight( Double.MAX_VALUE );
@@ -56,10 +55,10 @@ public class BulletFactory implements IntFunction<Node>
 
         if ( area.getParagraphs().size() > idx+1 ) {
             if ( area.getParagraph( idx+1 ).getParagraphStyle().isFolded() && ! ps.isFolded() ) {
-                foldIndicator.setOnMouseClicked( ME -> area.unfoldParagraphs( idx ) );
-                foldIndicator.getStyleClass().add( "fold-indicator" );
-                foldIndicator.setCursor( Cursor.HAND );
-                foldIndicator.setText( "+ " );
+//                foldIndicator.setOnMouseClicked( ME -> area.unfoldParagraphs( idx ) );
+//                foldIndicator.getStyleClass().add( "fold-indicator" );
+//                foldIndicator.setCursor( Cursor.HAND );
+//                foldIndicator.setText( " - " );
             }
         }
 
