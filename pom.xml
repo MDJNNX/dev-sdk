@@ -52,6 +52,14 @@
         </dependency>
 
         <dependency>
+            <groupId>com.satan</groupId>
+            <artifactId>richtextfx-fat</artifactId>
+            <version>0.10.5</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/richtextfx-fat-0.10.5.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.8</version>
@@ -67,12 +75,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20201115</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-            <version>2.4</version>
         </dependency>
 
     </dependencies>
