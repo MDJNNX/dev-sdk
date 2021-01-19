@@ -1,6 +1,9 @@
 package com.satan.menu.json;
 
 import com.satan.menu.common.BaseMenu;
+import com.satan.menu.common.ConsoleLog;
+import com.satan.menu.common.Constant;
+import com.satan.menu.common.ITextFocus;
 import com.satan.menu.json.handler.CompressHandler;
 import com.satan.menu.json.handler.JsonHandler;
 import com.satan.menu.json.handler.XmlHandler;
@@ -17,19 +20,15 @@ import javafx.scene.layout.HBox;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * @Description: json格式化
  * @Date: 2021/1/5 23:25:18下午
  * @Author: MDJ
  */
-public class JsonFormatController extends BaseMenu implements IStageResizeObserver {
+public class JsonFormatController extends BaseMenu implements IStageResizeObserver,ITextFocus {
 
     @FXML
     private HBox rawJsonPane;
@@ -40,15 +39,11 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
     @FXML
     private ComboBox convertorComboBox;
 
+    //原文本域
     private CodeArea rawCodeArea;
 
+    //结果文本域
     private CodeArea retCodeArea;
-
-    /**
-     * 操作按钮列表面板
-     */
-    @FXML
-    private HBox operateBtnsPane;
 
     /**
      * 格式化按钮
@@ -93,12 +88,12 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
         rawCodeArea = new CodeArea();
         rawCodeArea.setWrapText(true);
         rawCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(rawCodeArea));
-        rawCodeArea.getStyleClass().add("two-left-padding");
+        rawCodeArea.getStyleClass().add(Constant.CssStyle.TWO_LEFT_PADDING);
 
         retCodeArea = new CodeArea();
         retCodeArea.setWrapText(true);
         retCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(retCodeArea));
-        retCodeArea.getStyleClass().add("two-left-padding");
+        retCodeArea.getStyleClass().add(Constant.CssStyle.TWO_LEFT_PADDING);
     }
 
     /**
@@ -110,33 +105,31 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
     private void initialize() {
         ObservableList<String> options = FXCollections.observableArrayList("JSON", "XML", "JSON-XML");
         convertorComboBox.setItems(options);
-        convertorComboBox.setValue("JSON");
+        convertorComboBox.setValue(Constant.FormatSelected.JSON);
 
         convertorComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
             if (!oldValue.equals(newValue)) {
                 retCodeArea.replaceText("");
             }
             showBtns((String) newValue);
+            focus();
         });
 
         initBtnVisibleProperty();
-        showBtns("JSON");
+        showBtns(Constant.FormatSelected.JSON);
 
         PaneUtil.getStageResizeObservers().add(this);
         setSize(PaneUtil.getStage().getWidth(), PaneUtil.getStage().getHeight());
         rawJsonPane.getChildren().addAll(rawCodeArea, retCodeArea);
-
-        rawCodeArea.setVisible(true);
-        rawCodeArea.requestFocus();
     }
 
     /**
      * 初始化按钮的可见性
      */
     private void initBtnVisibleProperty() {
-        btnMaps.put("JSON", Arrays.asList(formatBtn, compressBtn, resetBtn));
-        btnMaps.put("XML", Arrays.asList(formatBtn, compressBtn, resetBtn));
-        btnMaps.put("JSON-XML", Arrays.asList(convertBtn, reverseConvertBtn, resetBtn));
+        btnMaps.put(Constant.FormatSelected.JSON, Arrays.asList(formatBtn, compressBtn, resetBtn));
+        btnMaps.put(Constant.FormatSelected.XML, Arrays.asList(formatBtn, compressBtn, resetBtn));
+        btnMaps.put(Constant.FormatSelected.JSON_XML, Arrays.asList(convertBtn, reverseConvertBtn, resetBtn));
         allBtns.addAll(Arrays.asList(formatBtn, compressBtn, noescapeBtn, convertBtn, reverseConvertBtn, resetBtn));
         allBtns.forEach((btn) -> btn.managedProperty().bindBidirectional(btn.visibleProperty()));
     }
@@ -148,15 +141,14 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
      */
     private void showBtns(String item) {
         List<Button> btns = btnMaps.get(item);
-        allBtns.forEach((btn) -> {
-            btn.setVisible(btns.contains(btn));
-        });
+        allBtns.forEach((btn) -> btn.setVisible(btns.contains(btn)));
     }
 
     @FXML
     private void reset() {
-        rawCodeArea.replaceText("");
-        retCodeArea.replaceText("");
+        rawCodeArea.replaceText(Constant.EMPTY_STR);
+        retCodeArea.replaceText(Constant.EMPTY_STR);
+        focus();
     }
 
     @FXML
@@ -164,17 +156,26 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
         String btnId = ((Button) event.getTarget()).getId();
         String selected = (String) convertorComboBox.getValue();
         String rawStr = rawCodeArea.getText();
-        String retStr = "";
-        if (btnId.equals("compressBtn")) {
+        String retStr = Constant.EMPTY_STR;
+        if (Constant.BtnIds.COMPRESS_BTN.equals(btnId)) {
             retStr = new CompressHandler().compress(rawStr);
         } else {
-            if (selected.startsWith("JSON")) {
+            if (selected.startsWith(Constant.FormatSelected.JSON)) {
                 retStr = new JsonHandler().handle(btnId, selected, rawStr);
-            } else if (selected.startsWith("XML")) {
+            } else if (selected.startsWith(Constant.FormatSelected.XML)) {
                 retStr = new XmlHandler().handle(btnId, selected, rawStr);
             }
         }
         retCodeArea.replaceText(retStr);
+        appendToConsole(new ConsoleLog(((Button) event.getTarget()).getText(), MessageFormat.format("原字符串:{0},结果:{1}", rawStr, retStr)));
+    }
+
+    /**
+     * 文本域聚焦
+     */
+    @Override
+    public void focus() {
+        rawCodeArea.requestFocus();
     }
 
     /**

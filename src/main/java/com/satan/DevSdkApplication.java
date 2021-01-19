@@ -1,5 +1,6 @@
 package com.satan;
 
+import com.satan.menu.common.Constant;
 import com.satan.menu.main.IStageResizeObserver;
 import com.satan.menu.main.MainPaneController;
 import com.satan.util.PaneUtil;
@@ -14,25 +15,21 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.satan.menu.common.Constant.MENU_FXML_MAP;
+
 public class DevSdkApplication extends Application {
-
-    //主界面宽度
-    private static final int WIDTH = 800;
-
-    //主界面高度
-    private static final int HEIGHT = 600;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        BorderPane rootLayout = FXMLLoader.load(getClass().getResource("/static/fxml/MainPane.fxml"));
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/static/fxml/MainPane.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(MENU_FXML_MAP.get(Constant.MenuIds.MAIN)));
         BorderPane rootLayout = fxmlLoader.load();
         PaneUtil.setStage(primaryStage);
         PaneUtil.setRootLayout(rootLayout);
-        primaryStage.getIcons().add(new Image("/config/images/logo.jpg"));
-        primaryStage.setTitle("Mdj-开发工具");
-        Scene scene = new Scene(rootLayout, WIDTH, HEIGHT);
-        scene.getStylesheets().add(getClass().getResource("/static/css/common.css").toExternalForm());
+        primaryStage.getIcons().add(new Image(Constant.StaticFiles.SOFT_LOGO));
+        primaryStage.setTitle(Constant.SoftInfo.TITLE);
+        Scene scene = new Scene(rootLayout, Constant.WIDTH, Constant.HEIGHT);
+        scene.getStylesheets().add(getClass().getResource(Constant.StaticFiles.COMMON_CSS).toExternalForm());
+        PaneUtil.setScene(scene);
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.show();
@@ -53,7 +50,7 @@ public class DevSdkApplication extends Application {
 
         //默认显示JSON面板:
         MainPaneController jfc = fxmlLoader.getController();
-        jfc.showPane("jsonFormat");
+        jfc.showPane(Constant.MenuIds.JSON_FORMAT);
     }
 
     public static void main(String[] args) {

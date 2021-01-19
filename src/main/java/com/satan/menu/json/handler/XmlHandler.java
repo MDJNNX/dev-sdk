@@ -6,6 +6,7 @@
 
 package com.satan.menu.json.handler;
 
+import com.satan.menu.common.Constant;
 import com.satan.util.XmlBaseUtil;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
@@ -29,8 +30,8 @@ import java.io.Writer;
 public class XmlHandler {
 
     public String handle(String btnId, String selected, String rawStr) {
-        String retStr = "";
-        if (btnId.equals("formatBtn")) {
+        String retStr = Constant.EMPTY_STR;
+        if (Constant.BtnIds.FORMAT_BTN.equals(btnId)) {
             rawStr = XmlBaseUtil.addHeader(rawStr);
             retStr = format(rawStr);
         }
@@ -47,11 +48,11 @@ public class XmlHandler {
     String xmlToJson(String rawStr) {
         String retStr;
         try {
-            org.json.JSONObject xmlJSONObj = XML.toJSONObject(rawStr);
-            retStr = xmlJSONObj.toString(0);
+            org.json.JSONObject xmlJsonObj = XML.toJSONObject(rawStr);
+            retStr = xmlJsonObj.toString(0);
         } catch (JSONException je) {
             System.out.println(je.toString());
-            retStr = "error...";
+            retStr = "XML转JSON异常:\n" + je.getMessage();
         }
         return retStr;
     }
@@ -68,13 +69,13 @@ public class XmlHandler {
             OutputFormat format = new OutputFormat(document);
             format.setLineWidth(65);
             format.setIndenting(true);
-            format.setIndent(2);
+            format.setIndent(4);
             Writer out = new StringWriter();
             XMLSerializer serializer = new XMLSerializer(out, format);
             serializer.serialize(document);
             return out.toString();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return "XML格式化异常:\n" + e.getMessage();
         }
     }
 

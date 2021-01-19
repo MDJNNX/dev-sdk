@@ -8,23 +8,23 @@ package com.satan.menu.main;
 
 import com.satan.DevSdkApplication;
 import com.satan.menu.common.ConsoleLog;
+import com.satan.menu.common.Constant;
+import com.satan.menu.common.ITextFocus;
 import com.satan.util.PaneUtil;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+
+import static com.satan.menu.common.Constant.MENU_FXML_MAP;
 
 /**
  * @Description: MainPaneController
@@ -41,12 +41,6 @@ public class MainPaneController {
     @FXML
     private Hyperlink consoleBtn;
 
-    @FXML
-    private TableView consoleTable;
-
-    @FXML
-    private TableColumn logMsg;
-
     /**
      * 初始化
      */
@@ -61,7 +55,7 @@ public class MainPaneController {
      */
     private void setConsoleIcon() {
         //设置console图标
-        Image btnImg = new Image("config/images/console.png");
+        Image btnImg = new Image(Constant.StaticFiles.CONSOLE_LOGO);
         ImageView imageView = new ImageView(btnImg);
         consoleBtn.setGraphic(imageView);
     }
@@ -127,12 +121,11 @@ public class MainPaneController {
      * 加载不同的菜单面板到主面板;
      *
      * @param event 按钮事件
-     * @throws Exception 异常
      */
     @FXML
     public void menuClick(ActionEvent event) {
         MenuItem menuItem = (MenuItem) event.getSource();
-        if (menuItem.getId().equals("about")) {
+        if (Constant.MenuIds.ABOUT.equals(menuItem.getId())) {
             showDialog();
             return;
         }
@@ -145,29 +138,16 @@ public class MainPaneController {
      * @param menuId 菜单id
      */
     public void showPane(String menuId) {
-        String menuFxmlPath;
-        switch (menuId) {
-            case "bjm":
-                menuFxmlPath = "/static/fxml/EncodeAndDecodePane.fxml";
-                break;
-            case "online":
-                menuFxmlPath = "/static/fxml/OnlineWebsitesPane.fxml";
-                break;
-            case "setting":
-                menuFxmlPath = "/static/fxml/SettingPane.fxml";
-                break;
-            case "jsonFormat":
-            default:
-                menuFxmlPath = "/static/fxml/JsonFormatPane.fxml";
-                break;
-
-        }
+        String menuFxmlPath = MENU_FXML_MAP.get(menuId);
         PaneUtil.getStatusMenuPane().setVisible(true);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(DevSdkApplication.class.getResource(menuFxmlPath));
         try {
             Node menuNode = loader.load();
             PaneUtil.getRootLayout().setCenter(menuNode);
+            if (loader.getController() instanceof ITextFocus) {
+                ((ITextFocus)loader.getController()).focus();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("加载异常...");
@@ -175,11 +155,11 @@ public class MainPaneController {
     }
 
     private void showDialog() {
-        Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-        _alert.setTitle("开发小工具");
-        _alert.setHeaderText("欢迎使用开发小工具! \n ----作者:马定健");
-        _alert.setContentText("本软件集成常用编码解码, json等工具, 方便离线时候使用; \n 同时也收录了常用的在线文档供快速访问。");
-        _alert.initOwner(PaneUtil.getStage());
-        _alert.show();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(Constant.SoftInfo.TITLE);
+        alert.setHeaderText(Constant.SoftInfo.HEADER_TEXT);
+        alert.setContentText(Constant.SoftInfo.CONTENT_TEXT);
+        alert.initOwner(PaneUtil.getStage());
+        alert.show();
     }
 }

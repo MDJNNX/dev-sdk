@@ -5,10 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.satan.menu.common.Constant;
 import com.satan.util.XmlBaseUtil;
 
 import java.util.Iterator;
 import java.util.Map;
+
 
 /**
  * @Description: json格式化
@@ -19,15 +21,15 @@ public class JsonHandler extends CompressHandler {
 
     public String handle(String btnId, String selected, String rawStr) {
 
-        if (btnId.equals("formatBtn")) {
+        if (Constant.BtnIds.FORMAT_BTN.equals(btnId)) {
             return jsonFormat(rawStr);
         }
 
-        if (selected.equals("JSON-XML")) {
-            if (btnId.equals("convertBtn")) {
+        if (Constant.FormatSelected.JSON_XML.equals(selected)) {
+            if (Constant.BtnIds.CONVERT_BTN.equals(btnId)) {
                 return jsonToXml(rawStr);
             } else {
-                return new XmlHandler().xmlToJson(rawStr);
+                return jsonFormat(new XmlHandler().xmlToJson(rawStr));
             }
         }
         return "";
@@ -91,8 +93,8 @@ public class JsonHandler extends CompressHandler {
             if (en.getKey().startsWith("-")) {
                 continue;
             }
-            if (en.getKey().equals("#text")) {
-                sb.append(en.getValue());//直接输出文本
+            if ("#text".equals(en.getKey())) {
+                sb.append(en.getValue());
                 continue;
             }
             if (en.getValue() instanceof JSONObject) {

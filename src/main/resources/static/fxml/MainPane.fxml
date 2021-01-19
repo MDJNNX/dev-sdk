@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.satan.menu.main.MainPaneController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.satan.menu.main.MainPaneController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
@@ -27,7 +27,7 @@
                         <MenuItem fx:id="online" mnemonicParsing="false" onAction="#menuClick" text="文档" />
                     </items>
                 </Menu>
-            <Menu mnemonicParsing="false" text="设置">
+            <Menu disable="true" mnemonicParsing="false" text="设置">
               <items>
                 <MenuItem fx:id="setting" mnemonicParsing="false" onAction="#menuClick" text="常用功能" />
               </items>

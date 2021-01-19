@@ -3,6 +3,8 @@ package com.satan.menu.bjm;
 import com.satan.menu.bjm.algandler.EncodeAndDecodeHandlerFactory;
 import com.satan.menu.common.BaseMenu;
 import com.satan.menu.common.ConsoleLog;
+import com.satan.menu.common.Constant;
+import com.satan.menu.common.ITextFocus;
 import com.satan.util.PaneUtil;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,7 +18,7 @@ import org.fxmisc.richtext.LineNumberFactory;
 import java.text.MessageFormat;
 import java.util.function.BiFunction;
 
-public class EncodeAndDecodeController extends BaseMenu {
+public class EncodeAndDecodeController extends BaseMenu implements ITextFocus {
 
     /**
      * 算法下拉选择框
@@ -41,13 +43,13 @@ public class EncodeAndDecodeController extends BaseMenu {
         rawCodeArea = new CodeArea();
         rawCodeArea.setWrapText(true);
         rawCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(rawCodeArea));
-        rawCodeArea.getStyleClass().add("two-left-padding");
+        rawCodeArea.getStyleClass().add(Constant.CssStyle.TWO_LEFT_PADDING);
         rawCodeArea.requestFocus();
 
         retCodeArea = new CodeArea();
         retCodeArea.setWrapText(true);
         retCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(rawCodeArea));
-        retCodeArea.getStyleClass().add("two-left-padding");
+        retCodeArea.getStyleClass().add(Constant.CssStyle.TWO_LEFT_PADDING);
         retCodeArea.requestFocus();
     }
 
@@ -57,14 +59,15 @@ public class EncodeAndDecodeController extends BaseMenu {
     @FXML
     @SuppressWarnings("unchecked")
     private void initialize() {
-        ObservableList<String> options = FXCollections.observableArrayList("BASE64", "MD5", "DES");
+        ObservableList<String> options = FXCollections.observableArrayList(Constant.EncodeAndDecode.BASE64, Constant.EncodeAndDecode.MD5, Constant.EncodeAndDecode.DES);
         algComboBox.setItems(options);
-        algComboBox.setValue("BASE64");
+        algComboBox.setValue(Constant.EncodeAndDecode.BASE64);
 
         algComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
             if (!oldValue.equals(newValue)) {
                 retCodeArea.replaceText("");
             }
+            focus();
         });
         setSize(PaneUtil.getStage().getWidth(), PaneUtil.getStage().getHeight());
         encodeAndDecodePane.getChildren().addAll(rawCodeArea, retCodeArea);
@@ -72,8 +75,9 @@ public class EncodeAndDecodeController extends BaseMenu {
 
     @FXML
     public void clear() {
-        rawCodeArea.replaceText("");
-        retCodeArea.replaceText("");
+        rawCodeArea.replaceText(Constant.EMPTY_STR);
+        retCodeArea.replaceText(Constant.EMPTY_STR);
+        focus();
     }
 
     @FXML
@@ -99,6 +103,13 @@ public class EncodeAndDecodeController extends BaseMenu {
         appendToConsole(new ConsoleLog(null, MessageFormat.format("算法:{0},原文本:{1},结果:{2}", alg, rawText, retText)));
     }
 
+    /**
+     * 文本域聚焦
+     */
+    @Override
+    public void focus() {
+        rawCodeArea.requestFocus();
+    }
 
     /**
      * 调整相关组件块宽度:

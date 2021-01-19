@@ -7,6 +7,7 @@
 package com.satan.util;
 
 import com.satan.menu.main.IStageResizeObserver;
+import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -24,6 +25,7 @@ import java.util.List;
  */
 public class PaneUtil {
 
+    private static Scene scene;
     private static Stage stage;
     private static BorderPane rootLayout;
     private static TableView consoleTable;
@@ -31,6 +33,14 @@ public class PaneUtil {
     private static VBox websiteViewPane;
     private static WebView webView;
     private static List<IStageResizeObserver> StageResizeObservers = new ArrayList<>();
+
+    public static Scene getScene() {
+        return scene;
+    }
+
+    public static void setScene(Scene scene) {
+        PaneUtil.scene = scene;
+    }
 
     public static List<IStageResizeObserver> getStageResizeObservers() {
         return StageResizeObservers;
