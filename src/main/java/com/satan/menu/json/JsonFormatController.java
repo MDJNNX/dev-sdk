@@ -3,6 +3,7 @@ package com.satan.menu.json;
 import com.satan.menu.common.BaseMenu;
 import com.satan.menu.json.handler.CompressHandler;
 import com.satan.menu.json.handler.JsonHandler;
+import com.satan.menu.json.handler.XmlHandler;
 import com.satan.menu.main.IStageResizeObserver;
 import com.satan.util.PaneUtil;
 import javafx.beans.value.ObservableValue;
@@ -145,14 +146,14 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
         String btnId = ((Button) event.getTarget()).getId();
         String selected = (String) convertorComboBox.getValue();
         String rawStr = rawCodeArea.getText();
-        String retStr;
+        String retStr = "";
         if (btnId.equals("compressBtn")) {
             retStr = new CompressHandler().compress(rawStr);
         } else {
-            if (selected.contains("JSON")) {
+            if (selected.startsWith("JSON")) {
                 retStr = new JsonHandler().handle(btnId, selected, rawStr);
-            } else {
-                retStr = "";
+            } else if(selected.startsWith("XML")) {
+                retStr = new XmlHandler().handle(btnId, selected, rawStr);
             }
         }
         retCodeArea.replaceText(retStr);

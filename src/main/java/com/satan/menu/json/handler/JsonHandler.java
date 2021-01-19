@@ -1,8 +1,14 @@
 package com.satan.menu.json.handler;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.satan.util.XmlBaseUtil;
+
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @Description: json格式化
@@ -10,8 +16,6 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
  * @Author: MDJ
  */
 public class JsonHandler extends CompressHandler {
-
-    private static final String ENCODING = "UTF-8";
 
     public String handle(String btnId, String selected, String rawStr) {
 
@@ -23,7 +27,7 @@ public class JsonHandler extends CompressHandler {
             if (btnId.equals("convertBtn")) {
                 return jsonToXml(rawStr);
             } else {
-                return xmlToJson(rawStr);
+                return new XmlHandler().xmlToJson(rawStr);
             }
         }
         return "";
@@ -48,9 +52,6 @@ public class JsonHandler extends CompressHandler {
             retStr = "json格式化异常:\n" + e.getMessage();
         }
         return retStr;
-//        retJsonCodeArea.replaceText(retStr);
-//        appendToConsole(new ConsoleLog(event.getSource(), MessageFormat.format("action:{0},rawText:{1},retText:{2}", btnName, rawStr, retStr)));
-
     }
 
     /**
@@ -60,16 +61,70 @@ public class JsonHandler extends CompressHandler {
      * @return xml字符串
      */
     private String jsonToXml(String rawStr) {
-        return "";
+        String retStr;
+        try {
+            StringBuilder sb = new StringBuilder();
+            JSONObject json = JSONObject.parseObject(rawStr, Feature.OrderedField);
+            jsonToXmlstr(json, sb);
+            sb = XmlBaseUtil.addHeader(sb);
+            retStr = new XmlHandler().format(sb.toString());
+            retStr = XmlBaseUtil.removeTail(retStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            retStr = "JSON转XML异常:\n" + e.getMessage();
+        }
+        return retStr.trim();
+    }
+
+
+    /**
+     * json文本转xml方法
+     *
+     * @param json json字符串
+     * @param sb   结果
+     */
+    private static void jsonToXmlstr(JSONObject json, StringBuilder sb) {
+        Iterator<Map.Entry<String, Object>> it = json.entrySet().iterator();
+        Map.Entry<String, Object> en;
+        while (it.hasNext()) {
+            en = it.next();
+            if (en.getKey().startsWith("-")) {
+                continue;
+            }
+            if (en.getKey().equals("#text")) {
+                sb.append(en.getValue());//直接输出文本
+                continue;
+            }
+            if (en.getValue() instanceof JSONObject) {
+                sb.append("<").append(en.getKey()).append(getAttr((JSONObject) en.getValue())).append(">");
+                JSONObject jo = json.getJSONObject(en.getKey());
+                jsonToXmlstr(jo, sb);
+                sb.append("</").append(en.getKey()).append(">");
+            } else if (en.getValue() instanceof JSONArray) {
+                JSONArray jarray = json.getJSONArray(en.getKey());
+                for (int i = 0; i < jarray.size(); i++) {
+                    JSONObject jsonobject = jarray.getJSONObject(i);
+                    sb.append("<").append(en.getKey()).append(getAttr(jsonobject)).append(">");
+                    jsonToXmlstr(jsonobject, sb);
+                    sb.append("</").append(en.getKey()).append(">");
+                }
+            } else {
+                sb.append("<").append(en.getKey()).append(">").append(en.getValue()).append("</").append(en.getKey()).append(">");
+            }
+        }
     }
 
     /**
-     * 将xml转成json
-     *
-     * @param rawStr 原始字符串
-     * @return json字符串
+     * 拼当前节点属性
      */
-    private String xmlToJson(String rawStr) {
-        return "";
+    private static String getAttr(JSONObject json) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Object> entity : json.entrySet()) {
+            if (entity.getKey().startsWith("-")) {
+                sb.append(" ").append(entity.getKey().substring(1)).append("=\"").append(entity.getValue().toString()).append("\"");
+            }
+
+        }
+        return sb.toString();
     }
 }
