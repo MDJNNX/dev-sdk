@@ -17,7 +17,12 @@ import javafx.scene.layout.HBox;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @Description: json格式化
@@ -75,6 +80,12 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
     @FXML
     private Button noescapeBtn;
 
+    /**
+     * 重置清空按钮
+     */
+    @FXML
+    private Button resetBtn;
+
     private static Map<String, List<Button>> btnMaps = new HashMap<>();
     private static Set<Button> allBtns = new HashSet<>();
 
@@ -105,26 +116,28 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
             if (!oldValue.equals(newValue)) {
                 retCodeArea.replaceText("");
             }
-            showBtns((String)newValue);
+            showBtns((String) newValue);
         });
 
         initBtnVisibleProperty();
         showBtns("JSON");
 
-
         PaneUtil.getStageResizeObservers().add(this);
         setSize(PaneUtil.getStage().getWidth(), PaneUtil.getStage().getHeight());
         rawJsonPane.getChildren().addAll(rawCodeArea, retCodeArea);
+
+        rawCodeArea.setVisible(true);
+        rawCodeArea.requestFocus();
     }
 
     /**
      * 初始化按钮的可见性
      */
     private void initBtnVisibleProperty() {
-        btnMaps.put("JSON", Arrays.asList(formatBtn, compressBtn, noescapeBtn));
-        btnMaps.put("XML", Arrays.asList(formatBtn, compressBtn, noescapeBtn));
-        btnMaps.put("JSON-XML", Arrays.asList(convertBtn, reverseConvertBtn));
-        allBtns.addAll(Arrays.asList(formatBtn, compressBtn, noescapeBtn, convertBtn, reverseConvertBtn));
+        btnMaps.put("JSON", Arrays.asList(formatBtn, compressBtn, resetBtn));
+        btnMaps.put("XML", Arrays.asList(formatBtn, compressBtn, resetBtn));
+        btnMaps.put("JSON-XML", Arrays.asList(convertBtn, reverseConvertBtn, resetBtn));
+        allBtns.addAll(Arrays.asList(formatBtn, compressBtn, noescapeBtn, convertBtn, reverseConvertBtn, resetBtn));
         allBtns.forEach((btn) -> btn.managedProperty().bindBidirectional(btn.visibleProperty()));
     }
 
@@ -137,8 +150,13 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
         List<Button> btns = btnMaps.get(item);
         allBtns.forEach((btn) -> {
             btn.setVisible(btns.contains(btn));
-            System.out.println("显示:" + btn.getId());
         });
+    }
+
+    @FXML
+    private void reset() {
+        rawCodeArea.replaceText("");
+        retCodeArea.replaceText("");
     }
 
     @FXML
@@ -152,7 +170,7 @@ public class JsonFormatController extends BaseMenu implements IStageResizeObserv
         } else {
             if (selected.startsWith("JSON")) {
                 retStr = new JsonHandler().handle(btnId, selected, rawStr);
-            } else if(selected.startsWith("XML")) {
+            } else if (selected.startsWith("XML")) {
                 retStr = new XmlHandler().handle(btnId, selected, rawStr);
             }
         }

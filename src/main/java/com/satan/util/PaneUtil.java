@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,7 +30,7 @@ public class PaneUtil {
     private static VBox statusMenuPane;
     private static VBox websiteViewPane;
     private static WebView webView;
-    private static List<IStageResizeObserver> StageResizeObservers;
+    private static List<IStageResizeObserver> StageResizeObservers = new ArrayList<>();
 
     public static List<IStageResizeObserver> getStageResizeObservers() {
         return StageResizeObservers;

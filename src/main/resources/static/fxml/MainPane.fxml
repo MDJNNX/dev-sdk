@@ -12,14 +12,14 @@
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
-                <Menu mnemonicParsing="false" text="编解码">
-                    <items>
-                        <MenuItem fx:id="bjm" mnemonicParsing="false" onAction="#menuClick" text="加密" />
-                    </items>
-                </Menu>
                 <Menu mnemonicParsing="false" text="格式化">
                     <items>
                         <MenuItem fx:id="jsonFormat" mnemonicParsing="false" onAction="#menuClick" text="格式化" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="编解码">
+                    <items>
+                        <MenuItem fx:id="bjm" mnemonicParsing="false" onAction="#menuClick" text="加密" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="网站">

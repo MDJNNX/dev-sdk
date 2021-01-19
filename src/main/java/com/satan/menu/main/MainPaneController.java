@@ -130,14 +130,23 @@ public class MainPaneController {
      * @throws Exception 异常
      */
     @FXML
-    public void menuClick(ActionEvent event) throws Exception {
-        String menuFxmlPath;
+    public void menuClick(ActionEvent event) {
         MenuItem menuItem = (MenuItem) event.getSource();
         if (menuItem.getId().equals("about")) {
             showDialog();
             return;
         }
-        switch (menuItem.getId()) {
+        showPane(menuItem.getId());
+    }
+
+    /**
+     * 显示面板
+     *
+     * @param menuId 菜单id
+     */
+    public void showPane(String menuId) {
+        String menuFxmlPath;
+        switch (menuId) {
             case "bjm":
                 menuFxmlPath = "/static/fxml/EncodeAndDecodePane.fxml";
                 break;
@@ -156,8 +165,13 @@ public class MainPaneController {
         PaneUtil.getStatusMenuPane().setVisible(true);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(DevSdkApplication.class.getResource(menuFxmlPath));
-        Node menuNode = loader.load();
-        PaneUtil.getRootLayout().setCenter(menuNode);
+        try {
+            Node menuNode = loader.load();
+            PaneUtil.getRootLayout().setCenter(menuNode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("加载异常...");
+        }
     }
 
     private void showDialog() {

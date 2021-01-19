@@ -1,6 +1,7 @@
 package com.satan;
 
 import com.satan.menu.main.IStageResizeObserver;
+import com.satan.menu.main.MainPaneController;
 import com.satan.util.PaneUtil;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -23,7 +24,9 @@ public class DevSdkApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        BorderPane rootLayout = FXMLLoader.load(getClass().getResource("/static/fxml/MainPane.fxml"));
+//        BorderPane rootLayout = FXMLLoader.load(getClass().getResource("/static/fxml/MainPane.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/static/fxml/MainPane.fxml"));
+        BorderPane rootLayout = fxmlLoader.load();
         PaneUtil.setStage(primaryStage);
         PaneUtil.setRootLayout(rootLayout);
         primaryStage.getIcons().add(new Image("/config/images/logo.jpg"));
@@ -47,6 +50,10 @@ public class DevSdkApplication extends Application {
 
         //窗口关闭事件
         primaryStage.setOnCloseRequest((event) -> System.out.print("监听到窗口关闭"));
+
+        //默认显示JSON面板:
+        MainPaneController jfc = fxmlLoader.getController();
+        jfc.showPane("jsonFormat");
     }
 
     public static void main(String[] args) {

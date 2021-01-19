@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="jsonFormatPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.satan.menu.json.JsonFormatController">
+<VBox fx:id="jsonFormatPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.satan.menu.json.JsonFormatController">
     <children>
         <HBox prefHeight="33.0" prefWidth="1162.0" VBox.vgrow="NEVER">
             <children>
@@ -31,6 +31,7 @@
                   <Button fx:id="reverseConvertBtn" layoutX="67.0" layoutY="10.0" mnemonicParsing="false" onAction="#btnClick" text="反转" />
                       <Button fx:id="compressBtn" mnemonicParsing="false" onAction="#btnClick" text="压缩" />
                       <Button fx:id="noescapeBtn" mnemonicParsing="false" onAction="#btnClick" text="去除转义" />
+                  <Button fx:id="resetBtn" layoutX="202.0" layoutY="10.0" mnemonicParsing="false" onAction="#reset" text="清空" />
                </children>
             </HBox>
             </children>
